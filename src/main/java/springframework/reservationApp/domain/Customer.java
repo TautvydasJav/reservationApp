@@ -3,16 +3,18 @@ package springframework.reservationApp.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
 @Access( AccessType.FIELD )
-public class Customer {
+public class Customer implements Comparable<Customer>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String time;
+    private LocalTime localTime;
 
     @ManyToOne
     private Specialist specialist;
@@ -59,5 +61,18 @@ public class Customer {
 
     public void setSpecialist(Specialist specialist) {
         this.specialist = specialist;
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
+    }
+
+    @Override
+    public int compareTo(Customer o) {
+        return localTime.compareTo(o.localTime);
     }
 }
