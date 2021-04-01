@@ -24,10 +24,8 @@ public class BootStrapData implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Customer customer = new Customer("10:10");
-
-        Specialist specialist1 = new Specialist("Specialist1");
-        Specialist specialist2 = new Specialist("Specialist2");
+        Specialist specialist1 = new Specialist("specialist1", "123");
+        Specialist specialist2 = new Specialist("specialist2", "123");
 
         specialistRepository.save(specialist1);
         specialistRepository.save(specialist2);

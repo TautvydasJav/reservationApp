@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reservation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/signin.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<style>
+    .button {
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+        padding: 16px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+    }
+    .button:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .closebtn {
+        margin-left: 15px;
+        color: #b11c1c;
+        font-weight: bold;
+        float: right;
+        font-size: 44px;
+        line-height: 40px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .closebtn:hover {
+        color: black;
+    }
+    * {box-sizing: border-box;}
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .topnav {
+        overflow: hidden;
+        background-color: #e9e9e9;
+    }
+
+    .topnav a {
+        float: left;
+        display: block;
+        color: black;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+    }
+
+    .topnav a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .topnav a.active {
+        background-color: #448f06;
+        color: white;
+    }
+
+    .topnav .search-container {
+        float: right;
+    }
+
+    .topnav input[type=text] {
+        padding: 6px;
+        margin-top: 8px;
+        font-size: 17px;
+        border: none;
+    }
+
+    .topnav .search-container button {
+        float: right;
+        padding: 6px 10px;
+        margin-top: 8px;
+        margin-right: 16px;
+        background: #ddd;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .topnav .search-container button:hover {
+        background: #ccc;
+    }
+    @media screen and (max-width: 600px) {
+        .topnav .search-container {
+            float: none;
+        }
+        .topnav a, .topnav input[type=text], .topnav .search-container button {
+            float: none;
+            display: block;
+            text-align: left;
+            width: 100%;
+            margin: 0;
+            padding: 14px;
+        }
+        .topnav input[type=text] {
+            border: 1px solid #ccc;
+        }
+    }
+</style>
+
+<div class="topnav" style="position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    height: 8%;">
+    <a class="active">Reservation</a>
+    <a th:href="@{/login}" method="get">Login</a>
+    <div class="search-container" style="position: fixed; right: 0; top: 30px;" >
+        <form th:action="@{/search}" method="get">
+            <input type="search" placeholder="Enter your code..." name="personalCode">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+
+    </div>
+</div>
+<div class="content" style="margin-top: 200px;">
+        <h1 class="reservationHeader">Book a reservation</h1>
+    <table>
+        <tr th:each="s : ${specialists}">
+            <form th:action="@{/reservation}" method="post">
+
+                <td><input type="hidden" th:value="${s.id}" name="specialistId" />
+                    <button type="submit" class="button" th:text="${s.username}"></button></td>
+            </form>
+        </tr>
+    </table>
+    <div th:class="${'alert ' + alertClass}" role="alert"  th:if="${message}" style="position: absolute; top: 0px; right: 0px; " >
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong th:text="${message}" style="font-size: 20px; margin: auto; width: 50%;"></strong><br>
+        <strong th:if="${id}" style="font-size: 20px; margin: auto; width: 50%;">Your ID number </strong><br>
+        <strong th:if="${id}" th:text="${id}" style="font-size: 30px; text-align: center;"></strong> <br>
+        <strong th:if="${time}" style="font-size: 20px; margin: auto; width: 50%;">Visit time: </strong><br>
+        <strong th:if="${time}" th:text="${time}" style="font-size: 30px; text-align: center;"></strong> <br>
+        <strong th:if="${code}" style="font-size: 20px; margin: auto; width: 50%;">Code: </strong><br>
+        <strong th:if="${code}" th:text="${code}" style="font-size: 30px; text-align: center;"></strong> <br>
+
+        <form th:if="${delete}" action="#" th:action="@{/delete}" method="get" >
+            <input type="hidden" name="id" th:value="${id}">
+            <button type="submit" class="button">
+                Delete
+            </button>
+        </form>
+    </div>
+</div>
+</nav>
+</body>
+</html>

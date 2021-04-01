@@ -17,6 +17,15 @@ body {
   padding: 10px;
 }
 
+.navbar {
+  position: relative;
+  background: white;
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
 .reservation {
   width: 100%;
   max-width: 330px;

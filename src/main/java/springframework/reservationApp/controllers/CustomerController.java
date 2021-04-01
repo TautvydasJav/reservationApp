@@ -23,7 +23,7 @@ public class CustomerController {
     @PostMapping("/customersList/addformsave")
     public String getPerson(Model model, Specialist specialist) {
         System.out.println("added id: "+specialist.getId());
-        System.out.println("added time: "+specialist.getName());
+        System.out.println("added time: "+specialist.getUsername());
 
         model.addAttribute("specialists", specialistRepository.findAll());
         return "specialistReservation";
