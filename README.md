@@ -1,7 +1,21 @@
-## Basic Reservation project with REST Authentication Login/Logout
+## Basic Reservation and Managment System 
+System allows for custommers to book an apointment to specialist, and for users to manage visits 
+
+### Technologies used
+Java 8
+Spring Boot 
+Spring Framework 
+Spring Data JPA
+Spring Security
+Hibernate
+H2 Database
+Spring MVC
+Thymeleaf
+Apache Maven
+Jetbrains IntelliJ IDEA Ultimate
 
 ### Users
-For now there are 3 hard-coded 'Specialist' users and one 'DEPARTMENT' 
+For now there are 3 hard-coded 'SPECIALIST' users and one 'DEPARTMENT' 
 ```
     "username":"specialist1","password":"123",
     "username":"specialist2","password":"123",
