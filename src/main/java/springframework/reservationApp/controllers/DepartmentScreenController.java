@@ -19,6 +19,6 @@ public class DepartmentScreenController {
     public String departmentScreen(Model model){
         model.addAttribute("specialists", specialistService.findAll());
         model.addAttribute("customers", customerService.getFirstCustomersByTime(departmentScreenCustomerCount));
-        return "customer/departmentScreen";
+        return "departmentScreen";
     }
 }

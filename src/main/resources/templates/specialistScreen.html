@@ -6,7 +6,7 @@
   <title>Specialist management</title>
 
   <!-- Bootstrap core CSS -->
-  <link th:href="@{/css/signin.css}" rel="stylesheet" />
+  <link th:href="@{/css/style.css}" rel="stylesheet" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -161,7 +161,7 @@
 </li>
 
 <div th:if="${error}" style="font-size: 20px; position: fixed;
-    top: 150px;
+    top: 100px;
     right: 50%;
     z-index: 999;">
   <p class="text-danger" th:text="${error}" style="font-size: 20px;"></p>
@@ -184,15 +184,15 @@
   </form>
 </div>
 
-<div class="content" style="
-    top: 200px;
+<div class="content" style=" margin-top: 150px ;
+    top: 0%;
     right: 0%;
     z-index: 999;">
   <h1 class="reservationHeader">Customers list</h1>
   <table>
     <tr th:each="c : ${customers}">
       <td>
-        <form th:action="@{/specialistDelete}" method="get">
+        <form th:action="@{/specialist/delete}" method="get">
           <strong style="font-size: 20px; text-align: center;">ID: </strong>
           <strong th:text="${c.id}" style="font-size: 20px; text-align: center;">|</strong>
           <strong style="font-size: 20px; text-align: center;"> | Time: </strong>

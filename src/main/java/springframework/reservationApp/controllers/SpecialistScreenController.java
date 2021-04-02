@@ -28,9 +28,10 @@ public class SpecialistScreenController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Specialist currentSpecialist = specialistService.findSpecialistByUsername(auth.getName());
         List<Customer> customers = specialistService.getCustomersFromSpecialistByUsername(auth.getName());
+
         model.addAttribute("customers", customers);
         model.addAttribute("status", currentSpecialist.isInVisit());
-        return "customer/specialistScreen";
+        return "specialistScreen";
     }
 
     @RequestMapping("/specialist/visit-status")
@@ -44,7 +45,7 @@ public class SpecialistScreenController {
                 specialistService.setIsInVisitByUsername(auth.getName(), true);
             }
             else{
-                redirectAttributes.addFlashAttribute("error", "No visits for this time");
+                redirectAttributes.addFlashAttribute("error", "No visits for now");
             }
         }
         if(type.equals("END")){
@@ -58,10 +59,11 @@ public class SpecialistScreenController {
         return "redirect:/specialist";
     }
 
-    @RequestMapping(value = "/specialistDelete", method = RequestMethod.GET)
+    @RequestMapping(value = "/specialist/delete", method = RequestMethod.GET)
     public String deleteCustomerFromSpecialistScreen(Model model, @ModelAttribute("id") String id) {
 
         customerService.deleteCustomerById(Integer.parseInt(id));
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         List<Customer> customers = specialistService.getCustomersFromSpecialistByUsername(auth.getName());
         model.addAttribute("customers", customers);
