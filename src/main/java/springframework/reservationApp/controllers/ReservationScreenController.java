@@ -20,7 +20,7 @@ public class ReservationScreenController {
     @RequestMapping("/reservation")
     public String reservationScreen(Model model){
         model.addAttribute("specialists", specialistService.findAll());
-        return "customer/reservationScreen";
+        return "reservationScreen";
     }
 
     @PostMapping("/reservation")
@@ -28,15 +28,14 @@ public class ReservationScreenController {
 
         model.addAttribute("specialists", specialistService.findAll());
 
-
         Customer newCustomer = customerService.createCustomer(specialistService.findById(Integer.parseInt(specialistId)));
 
-        redirectAttributes.addFlashAttribute("message", "Visits limit reached");
+        redirectAttributes.addFlashAttribute("message", "Visit limit has been reached");
         redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
         if(newCustomer == null)
             return "redirect:/reservation";
 
-        redirectAttributes.addFlashAttribute("message", "Booked");
+        redirectAttributes.addFlashAttribute("message", "");
         redirectAttributes.addFlashAttribute("alertClass", "alert-success");
         redirectAttributes.addFlashAttribute("id", newCustomer.getId());
         redirectAttributes.addFlashAttribute("time", newCustomer.getLocalTime());
@@ -44,7 +43,7 @@ public class ReservationScreenController {
         return "redirect:/reservation";
     }
 
-    @GetMapping("/search")
+    @GetMapping("/reservation/search")
     public String searchCustomer(Model model, @Param("personalCode") String personalCode, RedirectAttributes redirectAttributes) {
 
         model.addAttribute("specialists", specialistService.findAll());
@@ -65,7 +64,7 @@ public class ReservationScreenController {
         return "redirect:/reservation";
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/reservation/delete", method = RequestMethod.GET)
     public String deleteCustomer(Model model, @ModelAttribute("id") String id) {
 
         customerService.deleteCustomerById(Integer.parseInt(id));

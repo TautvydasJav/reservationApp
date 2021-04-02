@@ -13,16 +13,16 @@ import org.springframework.web.servlet.ModelAndView;
 public class LogInScreenController {
 
     @GetMapping("/login")
-    public ModelAndView loginSpecialist() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("customer/login");
-        return modelAndView;
+    public String loginSpecialist() {
+
+        return "login";
     }
 
     @RequestMapping("/default")
     public String defaultAfterLogin() {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         boolean hasSpecialistRole = auth.getAuthorities().stream()
                 .anyMatch(r -> r.getAuthority().equals("SPECIALIST"));
 

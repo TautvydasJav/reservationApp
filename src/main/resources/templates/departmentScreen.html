@@ -3,10 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="5" />
     <title>Reservation</title>
 
     <!-- Bootstrap core CSS -->
-    <link th:href="@{/css/signin.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -17,9 +18,9 @@
 
 <style>
     .button {
-        background-color: white;
+        background-color: #048511;
         color: black;
-        border: 2px solid #4CAF50;
+        border: 2px solid #000000;
         padding: 16px 32px;
         text-align: center;
         text-decoration: none;
@@ -30,23 +31,27 @@
         cursor: pointer;
     }
     .button:hover {
-        background-color: #4CAF50;
+        background-color: #048511;
         color: white;
     }
 
     .closebtn {
-        margin-left: 15px;
-        color: #b11c1c;
-        font-weight: bold;
-        float: right;
-        font-size: 44px;
-        line-height: 40px;
+        background-color: #f60000;
+        color: #000000;
+        border: 2px solid #000000;
+        padding: 16px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
         cursor: pointer;
-        transition: 0.3s;
     }
 
     .closebtn:hover {
-        color: black;
+        background-color: #ff0000;
+        color: #f3f3f3;
     }
     * {box-sizing: border-box;}
 
@@ -127,17 +132,15 @@
     top: 0;
     left: 0;
     z-index: 999;
-    width: 100%;
+    width: 20%;
     height: 8%;">
-    <a class="active" th:href="@{/reservation}" method="get">Reservation</a>
-    <a th:href="@{/login}" method="get">Login</a>
-    <div class="search-container" style="position: fixed; right: 0; top: 30px;" >
-        <form th:action="@{/search}" method="get">
-            <input type="search" placeholder="Enter your code..." name="personalCode">
-            <button type="submit"><i class="fa fa-search"></i></button>
-        </form>
+    <a class="active" th:href="@{/department}" method="get">Department Screen</a>
+    <a href="javascript: document.logoutForm.submit()" value="/logout" >LogOut</a>
 
-    </div>
+    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <input hidden type="submit" value="Sign Out"/>
+    </form>
+
 </div>
 
 <li>
@@ -158,35 +161,39 @@
     </script>
 </li>
 
-<div class="content" style="margin-top: 200px;">
-        <h1 class="reservationHeader">Book a reservation</h1>
+<div class="content" style=" position: fixed;
+    top: 20%;
+    left: 20%;
+    z-index: 999;">
+    <h1 class="reservationHeader">Specialists status</h1>
     <table>
         <tr th:each="s : ${specialists}">
-            <form th:action="@{/reservation}" method="post">
-
-                <td><input type="hidden" th:value="${s.id}" name="specialistId" />
-                    <button type="submit" class="button" th:text="${s.username}"></button></td>
-            </form>
+            <td>
+                <button th:th:unless="${s.isInVisit()}"  type="submit" class="button" th:text="${s.getUsername()}" >Free</button>
+                <button th:th:if="${s.isInVisit()}"  type="submit" class="closebtn" th:text="${s.getUsername()}">Busy</button>
+            </td>
         </tr>
     </table>
-    <div th:class="${'alert ' + alertClass}" role="alert"  th:if="${message}" style="position: absolute; top: 0px; right: 0px; " >
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-        <strong th:text="${message}" style="font-size: 20px; margin: auto; width: 50%;"></strong><br>
-        <strong th:if="${id}" style="font-size: 20px; margin: auto; width: 50%;">Your ID number </strong><br>
-        <strong th:if="${id}" th:text="${id}" style="font-size: 30px; text-align: center;"></strong> <br>
-        <strong th:if="${time}" style="font-size: 20px; margin: auto; width: 50%;">Visit time: </strong><br>
-        <strong th:if="${time}" th:text="${time}" style="font-size: 30px; text-align: center;"></strong> <br>
-        <strong th:if="${code}" style="font-size: 20px; margin: auto; width: 50%;">Code: </strong><br>
-        <strong th:if="${code}" th:text="${code}" style="font-size: 30px; text-align: center;"></strong> <br>
-
-        <form th:if="${delete}" action="#" th:action="@{/delete}" method="get" >
-            <input type="hidden" name="id" th:value="${id}">
-            <button type="submit" class="button">
-                Delete
-            </button>
-        </form>
-    </div>
 </div>
-</nav>
+
+<div class="content" style= "position: fixed;
+    top: 20%;
+    right: 20%;
+    z-index: 999;">
+    <h1 class="reservationHeader">Customers list</h1>
+    <table>
+        <tr th:each="c : ${customers}">
+            <td>
+                    <strong style="font-size: 25px; text-align: center;">Specialist: </strong>
+                    <strong th:text="${c.getSpecialist().getUsername()}" style="font-size: 25px; text-align: center;"></strong>
+                    <strong style="font-size: 25px; text-align: center;"> | ID: </strong>
+                    <strong th:text="${c.id}" style="font-size: 25px; text-align: center;"></strong>
+                    <strong style="font-size: 25px; text-align: center;"> | Time: </strong>
+                    <strong th:text="${c.localTime}" style="font-size: 25px; text-align: center;"></strong> <br>
+            </td>
+        </tr>
+    </table>
+</div>
+
 </body>
 </html>
