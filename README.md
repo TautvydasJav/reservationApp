@@ -1,0 +1,42 @@
+## Basic Reservation project with REST Authentication Login/Logout
+
+
+```
+1) http://localhost:8080/reservation
+ Does not require authentication customer can book nearest visit by choosing specialist. 
+ Time of visit generated automatically. Visit time 30 minutes.
+ System generates id, time and unique personal code.
+ Booked visit number is caped by how many visits can fit in one day (24hour span).
+ If there are gaps system will fill them with new visits without changing other visits time
+  
+2) http://localhost:8080/reservation/search
+  By entering unique personal code customer can check details of visit
+  
+3) http://localhost:8080/reservation/delete
+  When visit details form is open customer can cancel visit
+
+4) http://localhost:8080/login
+  Login page
+  
+5) http://localhost:8080/default
+  After succesful login redirects according to user role to different url
+  
+6) http://localhost:8080/specialist
+  Screen for only users with role 'SPECIALIST', user can see all customers booked to him.
+
+7) http://localhost:8080/specialist/delete
+  Deletion of any of Specialists customers
+  
+8) http://localhost:8080/specialist/visit-status
+  Once booked visit time comes specialist can change visit status to 'Active' or mark the end. 
+  Until time for next visit comes user cannot start new visit with customer.
+ 
+9) http://localhost:8080/department
+  Screen for only users with role 'DEPARTMENT', shows status of all specialist and next 5 nearest customers.
+  Refreshes every 5s.
+ 
+7) http://localhost:8080/h2-console
+  Database only availabe for users with role 'DEPARTMENT'
+   url: jdbc:h2:mem:testdb
+   user name: sa
+   password: 
