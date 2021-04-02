@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class LogInScreenController {
 
     @GetMapping("/login")
-    public String loginSpecialist() {
+    public String login() {
 
         return "login";
     }
