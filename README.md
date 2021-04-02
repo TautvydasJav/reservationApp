@@ -23,7 +23,8 @@ For now there are 3 hard-coded 'SPECIALIST' users and one 'DEPARTMENT'
     "username":"dept","password":"123".
 ```
 For password encryption and login authentication system uses Spring security
-  
+
+### https://reservation-app-task.herokuapp.com/login
 
 ```
 1) http://localhost:8080/reservation
