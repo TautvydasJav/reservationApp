@@ -1,6 +1,6 @@
 ## Basic Reservation project with REST Authentication Login/Logout
 
-# Users
+### Users
 For now there are 3 hard-coded 'Specialist' users and one 'DEPARTMENT' 
   ```  "username":"specialist1","password":"123",
     "username":"specialist2","password":"123",
