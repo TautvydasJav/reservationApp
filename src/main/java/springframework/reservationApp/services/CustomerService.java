@@ -8,6 +8,8 @@ import springframework.reservationApp.domain.Specialist;
 import springframework.reservationApp.repositories.CustomerRepository;
 import springframework.reservationApp.utils.TimeUtils;
 
+import java.util.*;
+
 @Service
 @AllArgsConstructor
 public class CustomerService {
@@ -16,18 +18,33 @@ public class CustomerService {
     private final TimeUtils timeUtils;
     private final PersonalCodeUtil codeUtil;
 
-    public Customer postCustomer(Specialist specialist){
+    public Customer createCustomer(Specialist specialist){
+        if(specialist.getCustomers().size() >= timeUtils.getMaxVisitsCount())
+            return null;
+
         Customer newCustomer = new Customer();
         newCustomer.setPersonalCode(codeUtil.generateCode());
         codeUtil.checkIfCodeIsUnique(newCustomer);
-        newCustomer.setSpecialist(specialist);
         newCustomer.setLocalTime(timeUtils.getNextCustomersTime(specialist));
+        newCustomer.setSpecialist(specialist);
         customerRepository.save(newCustomer);
         return newCustomer;
     }
 
-    public Iterable<Customer> findAll(){
-        return customerRepository.findAll();
+    public List<Customer> getFirstCustomersByTime(int count){
+        List<Customer> allCustomers = customerRepository.findAll();
+        Collections.sort(allCustomers);
+
+        List<Customer> firstCustomers = new ArrayList<>();
+
+        if(allCustomers.size() < 5)
+            count = allCustomers.size();
+
+        for(int i = 0; i < count; i++){
+            firstCustomers.add(allCustomers.get(i));
+        }
+
+        return firstCustomers;
     }
 
     public Customer findByPersonalCode(String code){
@@ -38,8 +55,7 @@ public class CustomerService {
         return customerRepository.existsByPersonalCode(code);
     }
 
-    public void deleteCustomer (int id){
-        customerRepository.delete(customerRepository.findById(id));
+    public void deleteCustomerById (int id){
+        customerRepository.deleteById(id);
     }
-
 }

@@ -1,45 +1,24 @@
 package springframework.reservationApp.services;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import springframework.reservationApp.domain.Customer;
-import springframework.reservationApp.domain.Specialist;
+import springframework.reservationApp.domain.*;
 import springframework.reservationApp.repositories.SpecialistRepository;
-import springframework.reservationApp.token.ConfirmationToken;
-import springframework.reservationApp.token.ConfirmationTokenService;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class SpecialistService implements UserDetailsService {
+public class SpecialistService{
 
-    private final static String USER_NOT_FOUND_MSG =
-            "user with email %s not found";
-
-    private final SpecialistRepository specialistRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ConfirmationTokenService confirmationTokenService;
-
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return specialistRepository.findByUsername(s)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(
-                                String.format(USER_NOT_FOUND_MSG, s)));
-    }
-
-    public Optional<Specialist> logInSpecialist(String username, String password){
-        Optional<Specialist> specialist = specialistRepository.findByUsernameAndPassword(username, password);
-        return specialist;
-    }
+    private SpecialistRepository specialistRepository;
+    private RoleService roleService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Iterable<Specialist> findAll() {
         return specialistRepository.findAll();
@@ -49,12 +28,46 @@ public class SpecialistService implements UserDetailsService {
         return specialistRepository.findById(id);
     }
 
-    public boolean existsById(int id) {
-        return specialistRepository.existsById(id);
+    public Specialist findSpecialistByUsername(String username) {
+        return specialistRepository.findByUsername(username);
     }
 
-    public int enableAppUser(String username) {
-        return specialistRepository.enableSpecialist(username);
+    public List<Customer> getCustomersFromSpecialistByUsername(String username){
+        return specialistRepository.findByUsername(username).getCustomers();
     }
 
+    public void setIsInVisitByUsername(String username, boolean state){
+        Specialist specialist = specialistRepository.findByUsername(username);
+        specialist.removeFirstCustomer();
+        specialist.setInVisit(state);
+        specialistRepository.save(specialist);
+    }
+
+    public void setIsNotInVisitByUsername(String username, boolean state){
+        specialistRepository.findByUsername(username).setInVisit(state);
+        specialistRepository.save(specialistRepository.findByUsername(username));
+    }
+
+    public Specialist addSpecialist(String username, String password, String role){
+        Specialist newSpecialist = new Specialist();
+        newSpecialist.setUsername(username);
+        newSpecialist.setPassword(bCryptPasswordEncoder.encode(password));
+        newSpecialist.setActive(true);
+        Role userRole = roleService.findByRoleName(role);
+        newSpecialist.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        return specialistRepository.save(newSpecialist);
+    }
+
+    public boolean checkForAvailableVisit(Specialist specialist){
+        LocalTime presentTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        if(specialist.getCustomers().isEmpty())
+            return false;
+        List<Customer> customers = specialist.getCustomers();
+        customers.get(0).getLocalTime();
+        if(customers.get(0).getLocalTime().isBefore(presentTime) || customers.get(0).getLocalTime().equals(presentTime)){
+            return true;
+        }
+        else
+            return false;
+    }
 }

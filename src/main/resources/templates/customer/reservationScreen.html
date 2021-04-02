@@ -129,7 +129,7 @@
     z-index: 999;
     width: 100%;
     height: 8%;">
-    <a class="active">Reservation</a>
+    <a class="active" th:href="@{/reservation}" method="get">Reservation</a>
     <a th:href="@{/login}" method="get">Login</a>
     <div class="search-container" style="position: fixed; right: 0; top: 30px;" >
         <form th:action="@{/search}" method="get">
@@ -139,6 +139,25 @@
 
     </div>
 </div>
+
+<li>
+    <a id="time" style="font-size: 50px; position: fixed;
+    top: 10%;
+    right: 5%;
+    z-index: 999;"></a>
+    <script th:inline="javascript">
+        function setTime(){
+            var dt=new Date();
+            var strHour=dt.getHours();
+            var strMinutes=dt.getMinutes();
+            if (strMinutes<10) strMinutes="0"+strMinutes;
+            strTime=strHour+":"+strMinutes;
+            time.innerHTML=strTime;
+        }
+        setInterval("setTime()",1000);
+    </script>
+</li>
+
 <div class="content" style="margin-top: 200px;">
         <h1 class="reservationHeader">Book a reservation</h1>
     <table>

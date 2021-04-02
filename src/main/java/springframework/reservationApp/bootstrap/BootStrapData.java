@@ -1,35 +1,27 @@
 package springframework.reservationApp.bootstrap;
 
 
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import springframework.reservationApp.domain.Customer;
-import springframework.reservationApp.domain.Specialist;
-import springframework.reservationApp.repositories.CustomerRepository;
-import springframework.reservationApp.repositories.SpecialistRepository;
+import springframework.reservationApp.services.RoleService;
+import springframework.reservationApp.services.SpecialistService;
+import springframework.reservationApp.services.UserService;
 
 @Component
+@AllArgsConstructor
 public class BootStrapData implements CommandLineRunner {
 
-    private final CustomerRepository customerRepository;
-    private final SpecialistRepository specialistRepository;
-
-    public BootStrapData(CustomerRepository customerRepository, SpecialistRepository specialistRepository) {
-        this.customerRepository = customerRepository;
-        this.specialistRepository = specialistRepository;
-    }
-
-
+    SpecialistService specialistService;
+    UserService userService;
+    RoleService roleService;
 
     @Override
     public void run(String... args) throws Exception {
-
-        Specialist specialist1 = new Specialist("specialist1", "123");
-        Specialist specialist2 = new Specialist("specialist2", "123");
-
-        specialistRepository.save(specialist1);
-        specialistRepository.save(specialist2);
-
-
+        roleService.createRole("SPECIALIST");
+        roleService.createRole("DEPARTMENT");
+        specialistService.addSpecialist("specialist1", "123", "SPECIALIST");
+        specialistService.addSpecialist("specialist2", "123", "SPECIALIST");
+        userService.addUser("dept", "123", "DEPARTMENT");
     }
 }

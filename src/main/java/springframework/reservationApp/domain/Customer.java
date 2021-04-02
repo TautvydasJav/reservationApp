@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalTime;
 
 @Entity
-@Access( AccessType.FIELD )
+@Access(AccessType.FIELD )
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,9 +21,10 @@ public class Customer implements Comparable<Customer>{
     private int id;
 
     private String personalCode;
+
     private LocalTime localTime;
 
-    @ManyToOne
+    @ManyToOne()
     private Specialist specialist;
 
     @Override

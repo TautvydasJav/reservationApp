@@ -6,36 +6,35 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import springframework.reservationApp.domain.Customer;
 import springframework.reservationApp.services.CustomerService;
 import springframework.reservationApp.services.SpecialistService;
-import springframework.reservationApp.domain.Customer;
 
 @Controller
 @AllArgsConstructor
-public class SpecialistController {
+public class ReservationScreenController {
 
     private final SpecialistService specialistService;
     private final CustomerService customerService;
 
     @RequestMapping("/reservation")
-    public String getSpecialists(Model model){
+    public String reservationScreen(Model model){
         model.addAttribute("specialists", specialistService.findAll());
         return "customer/reservationScreen";
     }
 
     @PostMapping("/reservation")
-    public String postCustomer(Model model, @Param("specialistId") String specialistId, RedirectAttributes redirectAttributes) {
+    public String reservationPostCustomer(Model model, @Param("specialistId") String specialistId, RedirectAttributes redirectAttributes) {
 
-        System.out.println("specialist id" +specialistId);
         model.addAttribute("specialists", specialistService.findAll());
 
-        redirectAttributes.addFlashAttribute("message", "Failed");
-        redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
-        if (!specialistService.existsById(Integer.parseInt(specialistId))) {
-            return "redirect:/reservation";
-        }
 
-        Customer newCustomer = customerService.postCustomer(specialistService.findById(Integer.parseInt(specialistId)));
+        Customer newCustomer = customerService.createCustomer(specialistService.findById(Integer.parseInt(specialistId)));
+
+        redirectAttributes.addFlashAttribute("message", "Visits limit reached");
+        redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+        if(newCustomer == null)
+            return "redirect:/reservation";
 
         redirectAttributes.addFlashAttribute("message", "Booked");
         redirectAttributes.addFlashAttribute("alertClass", "alert-success");
@@ -46,7 +45,7 @@ public class SpecialistController {
     }
 
     @GetMapping("/search")
-    public String search(Model model, @Param("personalCode") String personalCode, RedirectAttributes redirectAttributes) {
+    public String searchCustomer(Model model, @Param("personalCode") String personalCode, RedirectAttributes redirectAttributes) {
 
         model.addAttribute("specialists", specialistService.findAll());
 
@@ -69,31 +68,8 @@ public class SpecialistController {
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String deleteCustomer(Model model, @ModelAttribute("id") String id) {
 
-        customerService.deleteCustomer(Integer.parseInt(id));
+        customerService.deleteCustomerById(Integer.parseInt(id));
         model.addAttribute("specialists", specialistService.findAll());
         return "redirect:/reservation";
     }
-
-    @GetMapping("/login")
-    public String login() {
-       System.out.println("veikia");
-       return "customer/login";
-    }
-    @PostMapping("/login/submit")
-    public String submitLogin(@Param("username") String username, @Param("password") String password, RedirectAttributes redirectAttributes) {
-        System.out.println(username);
-        System.out.println(password);
-
-        return "redirect:/login";
-    }
-
-    /*
-    @PostMapping("/login")
-    public String login(@RequestBody RegistrationRequest request){
-
-
-        return "customer/login";
-    }
-
-     */
 }

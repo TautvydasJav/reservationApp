@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Login - Shopme Admin</title>
+    <title>Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous" />
@@ -27,23 +27,6 @@
         background-color: #4CAF50;
         color: white;
     }
-
-    .closebtn {
-        margin-left: 15px;
-        color: #b11c1c;
-        font-weight: bold;
-        float: right;
-        font-size: 44px;
-        line-height: 40px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    .closebtn:hover {
-        color: black;
-    }
-    * {box-sizing: border-box;}
-
     body {
         margin: 0;
         font-family: Arial, Helvetica, sans-serif;
@@ -120,28 +103,46 @@
     width: 100%;
     height: 8%;">
     <a th:href="@{/reservation}" method="get">Reservation</a>
-    <a class="active">Login</a>
+    <a class="active" th:href="@{/login}" method="get">Login</a>
 
 </div>
 
-<div class="container-fluid text-center">
-    <form th:action="@{/login/submit}" method="post" style="max-width: 350px; margin: 0 auto; top: 300px;">
+<li>
+    <a id="time" style="font-size: 50px; position: fixed;
+    top: 10%;
+    right: 5%;
+    z-index: 999;"></a>
+    <script th:inline="javascript">
+        function setTime(){
+            var dt=new Date();
+            var strHour=dt.getHours();
+            var strMinutes=dt.getMinutes();
+            if (strMinutes<10) strMinutes="0"+strMinutes;
+            strTime=strHour+":"+strMinutes;
+            time.innerHTML=strTime;
+        }
+        setInterval("setTime()",1000);
+    </script>
+</li>
 
-        <div th:if="${param.error}" style="max-width: 350px; margin: 0 auto; top: 280px;">
+<div class="container-fluid text-center">
+    <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto; top: 300px;">
+
+        <div th:if="${param.error}" style="max-width: 350px; margin-top: 100px;">
             <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
         </div>
 
-        <div th:if="${param.logout}" style="max-width: 350px; margin: 0 auto; top: 300px;">
+        <div th:if="${param.logout}" style="max-width: 350px; margin-top: 100px;">
             <p class="text-warning">You have been logged out.</p>
         </div>
 
         <div class="border border-secondary p-3 rounded" style="margin-top: 200px;">
-            <p>Specialist login panel</p>
+            <p>User login panel</p>
             <p>
-                <input type="text" name="username" class="form-control" placeholder="Username" required autofocus/>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus/>
             </p>
             <p>
-                <input type="password" name="password" class="form-control" placeholder="Password" required />
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password" required />
             </p>
             <p>
                 <input type="checkbox" name="remember-me" />&nbsp;Remember Me
