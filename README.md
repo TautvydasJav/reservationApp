@@ -1,21 +1,21 @@
-## Basic Reservation and Management System
-System allows for customer to book an appointment to specialist, and for users to manage visits
+## Basic Reservation and Managment System 
+System allows for custommers to book an apointment to specialist, and for users to manage visits 
 
 ### Technologies used
-Java 8,
-Spring Boot,
-Spring Framework,
-Spring Data JPA,
-Spring Security,
-Hibernate,
-H2 Database,
-Spring MVC,
-Thymeleaf,
-Apache Maven,
-Jetbrains IntelliJ IDEA Ultimate.
+Java 8
+Spring Boot 
+Spring Framework 
+Spring Data JPA
+Spring Security
+Hibernate
+H2 Database
+Spring MVC
+Thymeleaf
+Apache Maven
+Jetbrains IntelliJ IDEA Ultimate
 
 ### Users
-For now there are 3 hard-coded 'SPECIALIST' users and one 'DEPARTMENT'
+For now there are 3 hard-coded 'SPECIALIST' users and one 'DEPARTMENT' 
 ```
     "username":"specialist1","password":"123",
     "username":"specialist2","password":"123",
@@ -23,7 +23,7 @@ For now there are 3 hard-coded 'SPECIALIST' users and one 'DEPARTMENT'
     "username":"dept","password":"123".
 ```
 For password encryption and login authentication system uses Spring security
-
+  
 
 ```
 1) http://localhost:8080/reservation
