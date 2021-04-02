@@ -1,5 +1,13 @@
 ## Basic Reservation project with REST Authentication Login/Logout
 
+# Users
+For now there are 3 hard-coded 'Specialist' users and one 'DEPARTMENT' 
+    "username":"specialist1","password":"123",
+    "username":"specialist2","password":"123",
+    "username":"specialist3","password":"123",
+    "username":"dept","password":"123".
+For password encryption and login authentication system uses Spring security
+  
 
 ```
 1) http://localhost:8080/reservation
