@@ -12,13 +12,14 @@ import java.util.Iterator;
 @Component
 public class TimeUtils {
     private final int SESION_TIME_IN_MINUTES = 30; //  24h/0.5h max 48visits booked at one time
+    private final ZoneId localZone = ZoneId.of("Europe/Vilnius");
 
     public LocalTime getNextCustomersTime(Specialist specialist){
         if(specialist.getCustomers().isEmpty())
-            return LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+            return LocalTime.now(localZone).truncatedTo(ChronoUnit.MINUTES);
 
         Collections.sort(specialist.getCustomers());
-        LocalTime earliestTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES).plus(SESION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
+        LocalTime earliestTime = LocalTime.now(localZone).truncatedTo(ChronoUnit.MINUTES).plus(SESION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
 
 
        boolean emptySpaceFound = false;
