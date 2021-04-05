@@ -25,7 +25,7 @@ Users have many to many relationship with Roles and could have more than one.
 ```
 For password encryption and login authentication system uses Spring security
 
-### Page link:
+### Operational page link:
 ### https://reservation-app-task.herokuapp.com/login
 
 ```
@@ -33,7 +33,7 @@ For password encryption and login authentication system uses Spring security
  Does not require authentication customer can book nearest visit by choosing specialist. 
  Time of visit generated automatically. Visit time 30 minutes.
  System generates id, time and unique personal code.
- Booked visit number is caped by how many visits can fit in one day (24hour span).
+ Booked visits number is caped by how many visits can fit in one day (24hour span).
  If there are gaps system will fill them with new visits without changing other visits time
   
 2) http://localhost:8080/reservation/search
