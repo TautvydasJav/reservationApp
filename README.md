@@ -15,7 +15,7 @@ Apache Maven,
 Jetbrains IntelliJ IDEA Ultimate.
 
 ### Users
-For now there are 4 hard-coded Users. 3 'SPECIALIST' and one 'DEPARTMENT'.
+For now there are 4 hard-coded users and 2 roles. 3 'SPECIALIST' and one 'DEPARTMENT'.
 Users have many to many relationship with Roles and could have more than one.
 ```
     "username":"specialist1","password":"123",
@@ -53,11 +53,12 @@ For password encryption and login authentication system uses Spring security
   Screen for only users with role 'SPECIALIST', user can see all customers booked to him.
 
 7) http://localhost:8080/specialist/delete
-  Deletion of any of Specialists customers
+  Deletion of any customers assigned to Specialist. 
   
 8) http://localhost:8080/specialist/visit-status
   Then visit time comes specialist can change visit status to 'In Visit' or mark the end. 
-  Until time for next visit comes user cannot start new visit with customer.
+  Specialist can not start visit earlier.
+  Visit ends only then specialist marks the end.
  
 9) http://localhost:8080/department
   Screen for only users with role 'DEPARTMENT', shows status of all specialist and next 5 nearest customers in queue.
