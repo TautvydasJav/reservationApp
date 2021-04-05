@@ -26,8 +26,8 @@ public class SpecialistScreenController {
     @RequestMapping("/specialist")
     public String getSpecialistScreen(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Specialist currentSpecialist = specialistService.findSpecialistByUsername(auth.getName());
-        List<Customer> customers = specialistService.getCustomersFromSpecialistByUsername(auth.getName());
+        Specialist currentSpecialist = specialistService.findSpecialist(auth.getName());
+        List<Customer> customers = specialistService.getCustomersFromSpecialist(auth.getName());
 
         model.addAttribute("customers", customers);
         model.addAttribute("status", currentSpecialist.isInVisit());
@@ -38,18 +38,18 @@ public class SpecialistScreenController {
     public String visitStatus(Model model, @ModelAttribute("type") String type, RedirectAttributes redirectAttributes){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Specialist currentSpecialist = specialistService.findSpecialistByUsername(auth.getName());
+        Specialist currentSpecialist = specialistService.findSpecialist(auth.getName());
 
         if(type.equals("START")){
             if(specialistService.checkForAvailableVisit(currentSpecialist)) {
-                specialistService.setIsInVisitByUsername(auth.getName(), true);
+                specialistService.setIsInVisit(auth.getName(), true);
             }
             else{
                 redirectAttributes.addFlashAttribute("error", "No visits for now");
             }
         }
         if(type.equals("END")){
-            specialistService.setIsNotInVisitByUsername(auth.getName(), false);
+            specialistService.setIsNotInVisit(auth.getName(), false);
         }
 
         List<Customer> customers = currentSpecialist.getCustomers();
@@ -65,7 +65,7 @@ public class SpecialistScreenController {
         customerService.deleteCustomerById(Integer.parseInt(id));
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        List<Customer> customers = specialistService.getCustomersFromSpecialistByUsername(auth.getName());
+        List<Customer> customers = specialistService.getCustomersFromSpecialist(auth.getName());
         model.addAttribute("customers", customers);
         return "redirect:/specialist";
     }
