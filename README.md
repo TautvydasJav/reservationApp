@@ -46,7 +46,8 @@ For password encryption and login authentication system uses Spring security
   Login page
   
 5) http://localhost:8080/default
-  After succesful login redirects according to user role to different url
+  After succesful login redirects according to user role to different url.
+  If user has more than one role priority goes to url for specialist.
   
 6) http://localhost:8080/specialist
   Screen for only users with role 'SPECIALIST', user can see all customers booked to him.
@@ -55,11 +56,11 @@ For password encryption and login authentication system uses Spring security
   Deletion of any of Specialists customers
   
 8) http://localhost:8080/specialist/visit-status
-  Once booked visit time comes specialist can change visit status to 'Active' or mark the end. 
+  Then visit time comes specialist can change visit status to 'In Visit' or mark the end. 
   Until time for next visit comes user cannot start new visit with customer.
  
 9) http://localhost:8080/department
-  Screen for only users with role 'DEPARTMENT', shows status of all specialist and next 5 nearest customers.
+  Screen for only users with role 'DEPARTMENT', shows status of all specialist and next 5 nearest customers in queue.
   Refreshes every 5s.
  
 7) http://localhost:8080/h2-console
