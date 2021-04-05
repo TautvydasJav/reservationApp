@@ -5,9 +5,9 @@ import springframework.reservationApp.domain.Customer;
 import springframework.reservationApp.domain.Specialist;
 
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import java.util.Iterator;
 
 @Component
 public class TimeUtils {
