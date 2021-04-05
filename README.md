@@ -1,5 +1,5 @@
 ## Basic Reservation and Managment System 
-System allows for custommers to book an apointment to specialist, and for users to manage visits 
+System allows for customers to book an apointment to specialist, and for users to manage visits 
 
 ### Technologies used
 Java 8,
