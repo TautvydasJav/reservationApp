@@ -28,22 +28,22 @@ public class SpecialistService{
         return specialistRepository.findById(id);
     }
 
-    public Specialist findSpecialistByUsername(String username) {
+    public Specialist findSpecialist(String username) {
         return specialistRepository.findByUsername(username);
     }
 
-    public List<Customer> getCustomersFromSpecialistByUsername(String username){
+    public List<Customer> getCustomersFromSpecialist(String username){
         return specialistRepository.findByUsername(username).getCustomers();
     }
 
-    public void setIsInVisitByUsername(String username, boolean state){
+    public void setIsInVisit(String username, boolean state){
         Specialist specialist = specialistRepository.findByUsername(username);
         specialist.removeFirstCustomer();
         specialist.setInVisit(state);
         specialistRepository.save(specialist);
     }
 
-    public void setIsNotInVisitByUsername(String username, boolean state){
+    public void setIsNotInVisit(String username, boolean state){
         specialistRepository.findByUsername(username).setInVisit(state);
         specialistRepository.save(specialistRepository.findByUsername(username));
     }
