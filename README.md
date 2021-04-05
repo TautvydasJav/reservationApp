@@ -15,7 +15,8 @@ Apache Maven,
 Jetbrains IntelliJ IDEA Ultimate.
 
 ### Users
-For now there are 3 hard-coded 'SPECIALIST' users and one 'DEPARTMENT' 
+For now there are 3 hard-coded 'SPECIALIST' users and one 'DEPARTMENT'
+Users have many to many relationship with Roles and could have more than one, but all hard-coded ones have only one role.
 ```
     "username":"specialist1","password":"123",
     "username":"specialist2","password":"123",
