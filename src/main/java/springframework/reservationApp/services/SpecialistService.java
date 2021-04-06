@@ -5,9 +5,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import springframework.reservationApp.domain.*;
 import springframework.reservationApp.repositories.SpecialistRepository;
+import springframework.reservationApp.utils.TimeUtils;
 
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +18,7 @@ public class SpecialistService{
     private SpecialistRepository specialistRepository;
     private RoleService roleService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private TimeUtils timeUtils;
 
     public Iterable<Specialist> findAll() {
         return specialistRepository.findAll();
@@ -59,12 +59,13 @@ public class SpecialistService{
     }
 
     public boolean checkForAvailableVisit(Specialist specialist){
-        LocalTime presentTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
         if(specialist.getCustomers().isEmpty())
             return false;
+
         List<Customer> customers = specialist.getCustomers();
-        customers.get(0).getLocalTime();
-        if(customers.get(0).getLocalTime().isBefore(presentTime) || customers.get(0).getLocalTime().equals(presentTime)){
+
+        if(customers.get(0).getLocalTime().isBefore(timeUtils.getLocalTimeNow()) ||
+                customers.get(0).getLocalTime().equals(timeUtils.getLocalTimeNow())){
             return true;
         }
         else
