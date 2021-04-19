@@ -27,9 +27,9 @@ public class SpecialistScreenController {
     public String getSpecialistScreen(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Specialist currentSpecialist = specialistService.findSpecialist(auth.getName());
-        List<Customer> customers = specialistService.getCustomersFromSpecialist(auth.getName());
+        //List<Customer> customers = specialistService.getCustomersFromSpecialist(auth.getName());
 
-        model.addAttribute("customers", customers);
+        model.addAttribute("customers", customerService.getFirstCustomers(currentSpecialist));
         model.addAttribute("status", currentSpecialist.isInVisit());
         return "specialistScreen";
     }

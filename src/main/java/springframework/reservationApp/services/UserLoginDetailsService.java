@@ -1,7 +1,7 @@
 package springframework.reservationApp.services;
 
+
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +17,12 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class UserLoginDetailsService implements UserDetailsService {
 
     private final static String USER_NOT_FOUND_MSG =
             "user not found";
 
-    @Autowired
     private UserService userService;
 
     @Override

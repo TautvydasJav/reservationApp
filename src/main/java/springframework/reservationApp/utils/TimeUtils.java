@@ -11,7 +11,7 @@ import java.util.Collections;
 
 @Component
 public class TimeUtils {
-    private final int SESION_TIME_IN_MINUTES = 30; //  24h/0.5h max 48visits booked at one time
+    private final int SESSION_TIME_IN_MINUTES = 30; //  24h/0.5h max 48visits booked at one time
     private final ZoneId localZone = ZoneId.of("Europe/Vilnius");
 
     public LocalTime getNextCustomersTime(Specialist specialist){
@@ -19,7 +19,7 @@ public class TimeUtils {
             return getLocalTimeNow();
 
         Collections.sort(specialist.getCustomers());
-        LocalTime earliestTime = getLocalTimeNow().plus(SESION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
+        LocalTime earliestTime = getLocalTimeNow();
 
 
        boolean emptySpaceFound = false;
@@ -31,21 +31,25 @@ public class TimeUtils {
                 }
                 else{
                     emptySpaceFound = false;
-                    earliestTime = earliestTime.plus(SESION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
+                    earliestTime = earliestTime.plus(SESSION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
                 }
             }
 
             if(!earliestTime.isBefore(customer.getLocalTime()))            // searches for gap in visit schedule
-                earliestTime = customer.getLocalTime().plus(SESION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
-            else
+                earliestTime = customer.getLocalTime().plus(SESSION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
+            else{
+                if(doesVisitTimeFitsBoundary(earliestTime, customer.getLocalTime())) {
+                    return earliestTime;
+                }
                 emptySpaceFound = true;
+            }
         }
         return earliestTime;
     }
 
     public boolean doesVisitTimeFitsBoundary(LocalTime earliestTime, LocalTime nextVisit){
 
-        LocalTime visitTimeFarthestBoundary = earliestTime.plus(SESION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
+        LocalTime visitTimeFarthestBoundary = earliestTime.plus(SESSION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
 
         if(visitTimeFarthestBoundary.isBefore(nextVisit)
                 || visitTimeFarthestBoundary.equals(nextVisit))
@@ -59,6 +63,6 @@ public class TimeUtils {
     }
 
     public int getMaxVisitsCount(){
-        return 24*60/SESION_TIME_IN_MINUTES;
+        return 24*60/SESSION_TIME_IN_MINUTES;
     }
 }

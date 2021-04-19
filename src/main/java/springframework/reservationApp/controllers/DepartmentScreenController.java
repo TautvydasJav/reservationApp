@@ -18,7 +18,7 @@ public class DepartmentScreenController {
     @RequestMapping("/department")
     public String departmentScreen(Model model){
         model.addAttribute("specialists", specialistService.findAll());
-        model.addAttribute("customers", customerService.getFirstCustomersByTime(departmentScreenCustomerCount));
+        model.addAttribute("customers", customerService.getAllFirstCustomers(departmentScreenCustomerCount));
         return "departmentScreen";
     }
 }

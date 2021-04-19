@@ -31,7 +31,7 @@ public class CustomerService {
         return newCustomer;
     }
 
-    public List<Customer> getFirstCustomersByTime(int count){
+    public List<Customer> getAllFirstCustomers(int count){
         List<Customer> allCustomers = customerRepository.findAll();
         Collections.sort(allCustomers);
 
@@ -46,6 +46,13 @@ public class CustomerService {
 
         return firstCustomers;
     }
+
+    public List<Customer> getFirstCustomers(Specialist specialist){
+        Collections.sort(specialist.getCustomers());
+
+        return specialist.getCustomers();
+    }
+
 
     public Customer findByPersonalCode(String code){
         return customerRepository.findByPersonalCode(code);
