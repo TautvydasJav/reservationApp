@@ -41,7 +41,7 @@
     </li>
 
     <div class="container-fluid text-center">
-        <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto; top: 300px;">
+        <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto; top: 300px;">Login
 
             <div th:if="${param.error}" style="max-width: 350px; margin-top: 100px;">
                 <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
@@ -58,9 +58,6 @@
                 </p>
                 <p>
                     <input type="password" id="password" name="password" class="form-control" placeholder="Password" required />
-                </p>
-                <p>
-                    <input type="checkbox" name="remember-me" />&nbsp;Remember Me
                 </p>
                 <p>
                     <input type="submit" value="Login" class="button" />
