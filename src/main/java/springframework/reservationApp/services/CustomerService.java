@@ -7,6 +7,7 @@ import springframework.reservationApp.domain.Customer;
 import springframework.reservationApp.domain.Specialist;
 import springframework.reservationApp.repositories.CustomerRepository;
 import springframework.reservationApp.utils.TimeUtils;
+import static springframework.reservationApp.enums.CustomerStatus.*;
 
 import java.util.*;
 
@@ -18,41 +19,30 @@ public class CustomerService {
     private final TimeUtils timeUtils;
     private final PersonalCodeUtil codeUtil;
 
-    public Customer createCustomer(Specialist specialist){
+    public Customer addCustomer(Specialist specialist){
         if(specialist.getCustomers().size() >= timeUtils.getMaxVisitsCount())
             return null;
 
-        Customer newCustomer = new Customer();
-        newCustomer.setPersonalCode(codeUtil.generateCode());
-        codeUtil.checkIfCodeIsUnique(newCustomer);
-        newCustomer.setLocalTime(timeUtils.getNextCustomersTime(specialist));
-        newCustomer.setSpecialist(specialist);
+        Customer newCustomer = new Customer(codeUtil.generateCode()
+                , timeUtils.getNextCustomersTime(customerRepository.findBySpecialistAndStatus(specialist, WAITING.name()))
+                , specialist);
+
         customerRepository.save(newCustomer);
         return newCustomer;
     }
 
-    public List<Customer> getAllFirstCustomers(int count){
-        List<Customer> allCustomers = customerRepository.findAll();
-        Collections.sort(allCustomers);
+    public List<Customer> getAvailable(Specialist specialist){
+        List<Customer> customers = customerRepository.findBySpecialistAndStatus(specialist, WAITING.name());
+        Collections.sort(customers);
 
-        List<Customer> firstCustomers = new ArrayList<>();
-
-        if(allCustomers.size() < 5)
-            count = allCustomers.size();
-
-        for(int i = 0; i < count; i++){
-            firstCustomers.add(allCustomers.get(i));
-        }
-
-        return firstCustomers;
+        return customers;
     }
 
-    public List<Customer> getFirstCustomers(Specialist specialist){
-        Collections.sort(specialist.getCustomers());
-
-        return specialist.getCustomers();
+    public void setAsCanceled(int id){
+        Customer customer = customerRepository.findById(id);
+        customer.setAsCanceled();
+        customerRepository.save(customer);
     }
-
 
     public Customer findByPersonalCode(String code){
         return customerRepository.findByPersonalCode(code);
@@ -62,7 +52,4 @@ public class CustomerService {
         return customerRepository.existsByPersonalCode(code);
     }
 
-    public void deleteCustomerById (int id){
-        customerRepository.deleteById(id);
-    }
 }

@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import springframework.reservationApp.domain.Customer;
 import springframework.reservationApp.domain.Specialist;
+import springframework.reservationApp.repositories.SpecialistRepository;
 import springframework.reservationApp.services.CustomerService;
 import springframework.reservationApp.services.SpecialistService;
-
-import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -22,51 +20,50 @@ public class SpecialistScreenController {
 
     private final SpecialistService specialistService;
     private final CustomerService customerService;
+    private final SpecialistRepository specialistRepository;
 
     @RequestMapping("/specialist")
     public String getSpecialistScreen(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Specialist currentSpecialist = specialistService.findSpecialist(auth.getName());
-        //List<Customer> customers = specialistService.getCustomersFromSpecialist(auth.getName());
+        Specialist currentSpecialist = specialistRepository.findByUsername(auth.getName());
 
-        model.addAttribute("customers", customerService.getFirstCustomers(currentSpecialist));
-        model.addAttribute("status", currentSpecialist.isInVisit());
+        model.addAttribute("customers", customerService.getAvailable(currentSpecialist));
+        model.addAttribute("status", specialistService.isInVisit(currentSpecialist));
         return "specialistScreen";
     }
 
-    @RequestMapping("/specialist/visit-status")
-    public String visitStatus(Model model, @ModelAttribute("type") String type, RedirectAttributes redirectAttributes){
+    @RequestMapping("/specialist/start")
+    public String startVisit(@ModelAttribute("type") String type, RedirectAttributes redirectAttributes){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Specialist currentSpecialist = specialistService.findSpecialist(auth.getName());
+        Specialist currentSpecialist = specialistRepository.findByUsername(auth.getName());
 
-        if(type.equals("START")){
-            if(specialistService.checkForAvailableVisit(currentSpecialist)) {
-                specialistService.setIsInVisit(auth.getName(), true);
-            }
-            else{
-                redirectAttributes.addFlashAttribute("error", "No visits for now");
-            }
+        if(specialistService.checkForAvailableVisit(customerService.getAvailable(currentSpecialist))) {
+            specialistService.setStartOfVisit(currentSpecialist);
         }
-        if(type.equals("END")){
-            specialistService.setIsNotInVisit(auth.getName(), false);
+        else{
+            redirectAttributes.addFlashAttribute("error", "No visits for now");
         }
-
-        List<Customer> customers = currentSpecialist.getCustomers();
-        model.addAttribute("customers", customers);
-        redirectAttributes.addFlashAttribute("status", currentSpecialist.isInVisit());
 
         return "redirect:/specialist";
     }
 
-    @RequestMapping(value = "/specialist/delete", method = RequestMethod.GET)
-    public String deleteCustomerFromSpecialistScreen(Model model, @ModelAttribute("id") String id) {
-
-        customerService.deleteCustomerById(Integer.parseInt(id));
+    @RequestMapping("/specialist/end")
+    public String endVisit(@ModelAttribute("type") String type){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        List<Customer> customers = specialistService.getCustomersFromSpecialist(auth.getName());
-        model.addAttribute("customers", customers);
+        Specialist currentSpecialist = specialistRepository.findByUsername(auth.getName());
+
+        if(type.equals("END")){
+            specialistService.setEndOfVisit(currentSpecialist);
+        }
+        return "redirect:/specialist";
+    }
+
+    @RequestMapping(value = "/specialist/delete", method = RequestMethod.GET)
+    public String deleteCustomerFromSpecialistScreen(@ModelAttribute("id") String id){
+
+        customerService.setAsCanceled(Integer.parseInt(id));
         return "redirect:/specialist";
     }
 }

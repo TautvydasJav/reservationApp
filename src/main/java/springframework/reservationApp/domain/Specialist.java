@@ -12,18 +12,13 @@ import java.util.*;
 @Entity
 public class Specialist extends User {
 
-    protected boolean inVisit;
-
     @OneToMany(mappedBy = "specialist", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<Customer> customers;
 
-    public Specialist(String username, String password) {
-        this.username = username;
-        this.password = password;
-        inVisit = false;
-    }
+    @OneToOne
+    private Customer customerInVisit;
 
-    public void removeFirstCustomer(){
-        getCustomers().remove(getCustomers().get(0));
+    public Specialist(String username, String password, HashSet<Role> roles, boolean active) {
+        super(username, password, roles, active);
     }
 }

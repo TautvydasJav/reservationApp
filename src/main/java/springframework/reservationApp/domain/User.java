@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -29,4 +30,11 @@ public class User {
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     protected Set<Role> roles;
+
+    public User(String username, String password, HashSet<Role> roles, boolean active) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+        this.active = active;
+    }
 }

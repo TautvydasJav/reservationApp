@@ -4,21 +4,22 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import springframework.reservationApp.services.CustomerService;
-import springframework.reservationApp.services.SpecialistService;
+import springframework.reservationApp.repositories.CustomerRepository;
+import springframework.reservationApp.repositories.SpecialistRepository;
+
+import static springframework.reservationApp.enums.CustomerStatus.WAITING;
 
 @Controller
 @AllArgsConstructor
 public class DepartmentScreenController {
 
-    private final SpecialistService specialistService;
-    private final CustomerService customerService;
-    private final int departmentScreenCustomerCount = 5;
+    private final SpecialistRepository specialistRepository;
+    private final CustomerRepository customerRepository;
 
     @RequestMapping("/department")
     public String departmentScreen(Model model){
-        model.addAttribute("specialists", specialistService.findAll());
-        model.addAttribute("customers", customerService.getAllFirstCustomers(departmentScreenCustomerCount));
+        model.addAttribute("specialists", specialistRepository.findAll());
+        model.addAttribute("customers", customerRepository.findFirst5ByStatusOrderByVisitTimeAsc(WAITING.name()));
         return "departmentScreen";
     }
 }

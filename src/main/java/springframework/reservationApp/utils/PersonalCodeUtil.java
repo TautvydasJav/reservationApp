@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @Component
-public class PersonalCodeUtil {
+public class PersonalCodeUtil{
 
     private final CustomerRepository customerRepository;
 
@@ -17,20 +17,26 @@ public class PersonalCodeUtil {
     }
 
     public String generateCode(){
-        ArrayList<Integer> list = new ArrayList<Integer>();
+        ArrayList<Integer> list = new ArrayList<>();
         for (int i=1; i<10; i++) {
             list.add(i);
         }
         Collections.shuffle(list);
-        return list.get(0).toString()+list.get(1).toString()+list.get(2).toString()+list.get(3).toString();
+        String personalCode = list.get(0).toString()+list.get(1).toString()+list.get(2).toString()+list.get(3).toString();
+
+        if(checkIfCodeIsUnique(personalCode)){
+            return personalCode;
+        }
+        else personalCode = generateCode();
+
+        return personalCode;
     }
 
-    public void checkIfCodeIsUnique(Customer newCustomer) {
-        if(customerRepository.existsByPersonalCode(newCustomer.getPersonalCode())) {
-            newCustomer.setPersonalCode(generateCode());
-            checkIfCodeIsUnique(newCustomer);
+    public boolean checkIfCodeIsUnique(String personalCode) {
+        if(customerRepository.existsByPersonalCode(personalCode)) {
+            return false;
         }
         else
-            return;
+            return true;
     }
 }

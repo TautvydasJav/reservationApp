@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import springframework.reservationApp.domain.Role;
 import springframework.reservationApp.domain.Specialist;
 import springframework.reservationApp.domain.User;
+import springframework.reservationApp.repositories.UserRepository;
 import springframework.reservationApp.services.SpecialistService;
 
 import javax.transaction.Transactional;
@@ -23,13 +24,13 @@ public class UserLoginDetailsService implements UserDetailsService {
     private final static String USER_NOT_FOUND_MSG =
             "user not found";
 
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String userName) {
-        if(userService.existsByUsername(userName)){
-            User user = userService.findUserByUsername(userName);
+    public UserDetails loadUserByUsername(String username) {
+        if(userRepository.existsByUsername(username)){
+            User user = userRepository.findByUsername(username);
             List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
             return buildUserForAuthentication(user, authorities);
         }

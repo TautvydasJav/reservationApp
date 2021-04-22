@@ -10,6 +10,7 @@ import springframework.reservationApp.utils.TimeUtils;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,52 +21,42 @@ public class SpecialistService{
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private TimeUtils timeUtils;
 
-    public Iterable<Specialist> findAll() {
-        return specialistRepository.findAll();
-    }
-
-    public Specialist findById(int id) {
-        return specialistRepository.findById(id);
-    }
-
-    public Specialist findSpecialist(String username) {
-        return specialistRepository.findByUsername(username);
-    }
-
-    public List<Customer> getCustomersFromSpecialist(String username){
-        return specialistRepository.findByUsername(username).getCustomers();
-    }
-
-    public void setIsInVisit(String username, boolean state){
-        Specialist specialist = specialistRepository.findByUsername(username);
-        specialist.removeFirstCustomer();
-        specialist.setInVisit(state);
+    public void setStartOfVisit(Specialist specialist){
+        specialist.setCustomerInVisit(specialist.getCustomers().get(0));
+        specialist.getCustomerInVisit().setAsInVisit();
         specialistRepository.save(specialist);
     }
 
-    public void setIsNotInVisit(String username, boolean state){
-        specialistRepository.findByUsername(username).setInVisit(state);
-        specialistRepository.save(specialistRepository.findByUsername(username));
+    public void setEndOfVisit(Specialist specialist){
+        specialist.getCustomerInVisit().setAsDone();
+        specialist.setCustomerInVisit(null);
+        specialistRepository.save(specialist);
+    }
+
+    public boolean isInVisit(Specialist specialist){
+        Optional<Customer> customer= Optional.ofNullable(specialist.getCustomerInVisit());
+        if(customer.isPresent())
+            return true;
+        else
+            return false;
     }
 
     public Specialist addSpecialist(String username, String password, String role){
-        Specialist newSpecialist = new Specialist();
-        newSpecialist.setUsername(username);
-        newSpecialist.setPassword(bCryptPasswordEncoder.encode(password));
-        newSpecialist.setActive(true);
-        Role userRole = roleService.findByRoleName(role);
-        newSpecialist.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+
+        Specialist newSpecialist = new Specialist(username
+                                                    , bCryptPasswordEncoder.encode(password)
+                                                    , new HashSet<>(Arrays.asList(roleService.findByRoleName(role)))
+                                                    ,true);
         return specialistRepository.save(newSpecialist);
     }
 
-    public boolean checkForAvailableVisit(Specialist specialist){
-        if(specialist.getCustomers().isEmpty())
+    public boolean checkForAvailableVisit(List<Customer> customers){
+
+        if(customers.isEmpty())
             return false;
 
-        List<Customer> customers = specialist.getCustomers();
-
-        if(customers.get(0).getLocalTime().isBefore(timeUtils.getLocalTimeNow()) ||
-                customers.get(0).getLocalTime().equals(timeUtils.getLocalTimeNow())){
+        if(customers.get(0).getVisitTime().isBefore(timeUtils.getLocalTimeNow()) ||
+                customers.get(0).getVisitTime().equals(timeUtils.getLocalTimeNow())){
             return true;
         }
         else

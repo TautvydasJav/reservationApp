@@ -8,25 +8,27 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class TimeUtils {
-    private final int SESSION_TIME_IN_MINUTES = 30; //  24h/0.5h max 48visits booked at one time
-    private final ZoneId localZone = ZoneId.of("Europe/Vilnius");
 
-    public LocalTime getNextCustomersTime(Specialist specialist){
-        if(specialist.getCustomers().isEmpty())
+    private static final int SESSION_TIME_IN_MINUTES = 30; //  24h/0.5h max 48visits booked at one time
+    private static final ZoneId localZone = ZoneId.of("Europe/Vilnius");
+
+    public static LocalTime getNextCustomersTime(List<Customer> customers){
+        if(customers.isEmpty())
             return getLocalTimeNow();
 
-        Collections.sort(specialist.getCustomers());
+        Collections.sort(customers);
         LocalTime earliestTime = getLocalTimeNow();
 
 
        boolean emptySpaceFound = false;
 
-        for(Customer customer : specialist.getCustomers()){
+        for(Customer customer : customers){
             if(emptySpaceFound){
-                if(doesVisitTimeFitsBoundary(earliestTime, customer.getLocalTime())) {
+                if(doesVisitTimeFitsBoundary(earliestTime, customer.getVisitTime())) {
                     return earliestTime;
                 }
                 else{
@@ -35,10 +37,10 @@ public class TimeUtils {
                 }
             }
 
-            if(!earliestTime.isBefore(customer.getLocalTime()))            // searches for gap in visit schedule
-                earliestTime = customer.getLocalTime().plus(SESSION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
+            if(!earliestTime.isBefore(customer.getVisitTime()))            // searches for gap in visit schedule
+                earliestTime = customer.getVisitTime().plus(SESSION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
             else{
-                if(doesVisitTimeFitsBoundary(earliestTime, customer.getLocalTime())) {
+                if(doesVisitTimeFitsBoundary(earliestTime, customer.getVisitTime())) {
                     return earliestTime;
                 }
                 emptySpaceFound = true;
@@ -47,7 +49,7 @@ public class TimeUtils {
         return earliestTime;
     }
 
-    public boolean doesVisitTimeFitsBoundary(LocalTime earliestTime, LocalTime nextVisit){
+    public static boolean doesVisitTimeFitsBoundary(LocalTime earliestTime, LocalTime nextVisit){
 
         LocalTime visitTimeFarthestBoundary = earliestTime.plus(SESSION_TIME_IN_MINUTES, ChronoUnit.MINUTES);
 
@@ -58,7 +60,7 @@ public class TimeUtils {
             return false;
     }
 
-    public LocalTime getLocalTimeNow(){
+    public static LocalTime getLocalTimeNow(){
         return LocalTime.now(localZone).truncatedTo(ChronoUnit.MINUTES);
     }
 

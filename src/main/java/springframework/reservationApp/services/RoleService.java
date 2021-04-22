@@ -8,7 +8,10 @@ import springframework.reservationApp.repositories.RoleRepository;
 @Service
 @AllArgsConstructor
 public class RoleService {
+
     private RoleRepository roleRepository;
+
     public void createRole(String role) {roleRepository.save(new Role(role)); }
+
     public Role findByRoleName(String role) {return roleRepository.findByRole(role);}
 }
