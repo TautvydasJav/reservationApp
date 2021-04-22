@@ -1,3 +1,8 @@
+Pakeitimai:
+- Vaizduojami vykdomi vizitai
+- Vizitai nėra daugiau trinami
+- Code refactor
+
 ## Basic Reservation and Managment System 
 System allows for customers to book an a to  appointment , and for users to manage visits 
 
