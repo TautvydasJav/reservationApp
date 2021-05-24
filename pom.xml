@@ -79,6 +79,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>reservation-app</finalName>
 	</build>
 
 </project>
