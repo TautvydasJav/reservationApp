@@ -24,5 +24,6 @@ public class BootStrapData implements CommandLineRunner {
         specialistService.addSpecialist("specialist2", "123", "SPECIALIST");
         specialistService.addSpecialist("specialist3", "123", "SPECIALIST");
         userService.addUser("dept", "123", "DEPARTMENT");
+        System.out.println("testing cd");
     }
 }
