@@ -9,10 +9,8 @@ System allows for reservations to book an a to  appointment , and for users to m
 ### Technologies used
 Java 8,
 Spring Boot, 
-Spring Framework, 
 Spring Data JPA,
 Spring Security,
-Hibernate,
 H2 Database,
 Spring MVC,
 Thymeleaf,
