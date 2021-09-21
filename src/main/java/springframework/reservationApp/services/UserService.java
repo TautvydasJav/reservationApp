@@ -18,11 +18,11 @@ public class UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public User addUser(String username, String password, String role){
-        User user = new User(username
-                            , bCryptPasswordEncoder.encode(password)
-                            , new HashSet<>(Arrays.asList(roleService.findByRoleName(role)))
-                            , true);
-
-        return userRepository.save(user);
+        return userRepository.save(User.builder()
+                .username(username)
+                .password(bCryptPasswordEncoder.encode(password))
+                .roles(new HashSet<>(Arrays.asList(roleService.findByRoleName(role))))
+                .active(true)
+                .build());
     }
 }

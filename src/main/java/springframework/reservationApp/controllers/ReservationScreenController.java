@@ -43,7 +43,7 @@ public class ReservationScreenController {
     }
     @PostMapping
     public String postCustomer(@Param("specialistId") String specialistId, RedirectAttributes redirectAttributes) {
-        Reservation newReservation = reservationService.addCustomer(specialistRepository.findById(Integer.parseInt(specialistId)));
+        Reservation newReservation = reservationService.createReservation(specialistRepository.findById(Integer.parseInt(specialistId)));
 
         redirectAttributes.addFlashAttribute("message", "Visit limit has been reached");
         redirectAttributes.addFlashAttribute("alertClass", "alert-danger");

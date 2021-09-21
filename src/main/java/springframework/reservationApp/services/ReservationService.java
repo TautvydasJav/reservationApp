@@ -10,6 +10,7 @@ import springframework.reservationApp.utils.TimeUtils;
 import static springframework.reservationApp.enums.CustomerStatus.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -17,24 +18,24 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final UserPersonalCodeService personalCodeService;
+    private final SpecialistService specialistService;
 
-    public Reservation addCustomer(Specialist specialist){
+    public Reservation createReservation(Specialist specialist){
         if(specialist.getReservations().size() >= TimeUtils.getMaxVisitsCount())
             return null;
 
         Reservation newReservation = new Reservation(personalCodeService.generateCode()
-                , TimeUtils.getNextCustomersTime(reservationRepository.findBySpecialistAndStatus(specialist, WAITING.name()))
+                , TimeUtils.getNextCustomersTime(reservationRepository.getAllBySpecialistAndStatus(specialist, WAITING.name()))
                 , specialist);
 
         reservationRepository.save(newReservation);
         return newReservation;
     }
 
-    public List<Reservation> getAvailable(Specialist specialist){
-        List<Reservation> reservations = reservationRepository.findBySpecialistAndStatus(specialist, WAITING.name());
-        Collections.sort(reservations);
+    public List<Reservation> getAvailableReservations(){
+        Specialist specialist = specialistService.getLoggedInSpecialist();
 
-        return reservations;
+        return reservationRepository.getAllBySpecialistAndStatus(specialist, WAITING.name()).stream().collect(Collectors.toList());
     }
 
     public void setAsCanceled(int id){

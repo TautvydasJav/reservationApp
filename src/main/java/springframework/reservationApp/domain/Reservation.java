@@ -7,10 +7,12 @@ import javax.persistence.*;
 import java.time.LocalTime;
 import static springframework.reservationApp.enums.CustomerStatus.*;
 
-@Data
+@Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Getter
+@Setter
 public class Reservation implements Comparable<Reservation>{
 
     @Id

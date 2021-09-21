@@ -1,18 +1,16 @@
 package springframework.reservationApp.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 @Data
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,10 +28,10 @@ public class User {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     protected Set<Role> roles;
 
-    public User(String username, String password, HashSet<Role> roles, boolean active) {
+    public User(String username, String password, boolean active, Set<Role> roles) {
         this.username = username;
         this.password = password;
-        this.roles = roles;
         this.active = active;
+        this.roles = roles;
     }
 }

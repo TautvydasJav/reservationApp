@@ -19,7 +19,7 @@ public class DepartmentScreenController {
     @RequestMapping("/department")
     public String departmentScreen(Model model){
         model.addAttribute("specialists", specialistRepository.findAll());
-        model.addAttribute("customers", reservationRepository.findFirst5ByStatusOrderByVisitTimeAsc(WAITING.name()));
+        model.addAttribute("reservations", reservationRepository.findFirst5ByStatusOrderByVisitTimeAsc(WAITING.name()));
         return "departmentScreen";
     }
 }

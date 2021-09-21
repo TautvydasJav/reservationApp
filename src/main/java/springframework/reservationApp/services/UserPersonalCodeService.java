@@ -1,7 +1,6 @@
 package springframework.reservationApp.services;
 
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import springframework.reservationApp.repositories.ReservationRepository;
 

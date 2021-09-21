@@ -17,7 +17,7 @@ public class BootStrapData implements CommandLineRunner {
     RoleService roleService;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         roleService.createRole("SPECIALIST");
         roleService.createRole("DEPARTMENT");
         specialistService.addSpecialist("specialist1", "123", "SPECIALIST");

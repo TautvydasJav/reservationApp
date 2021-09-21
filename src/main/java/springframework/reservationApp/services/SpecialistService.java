@@ -1,6 +1,8 @@
 package springframework.reservationApp.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import springframework.reservationApp.domain.*;
@@ -20,19 +22,27 @@ public class SpecialistService{
     private RoleService roleService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void setStartOfVisit(Specialist specialist){
+    public Specialist getLoggedInSpecialist(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return specialistRepository.findByUsername(auth.getName());
+    }
+
+    public void setStartOfVisit(){
+        Specialist specialist = getLoggedInSpecialist();
         specialist.setReservationInVisit(specialist.getReservations().get(0));
         specialist.getReservationInVisit().setAsInVisit();
         specialistRepository.save(specialist);
     }
 
-    public void setEndOfVisit(Specialist specialist){
+    public void setEndOfVisit(){
+        Specialist specialist = getLoggedInSpecialist();
         specialist.getReservationInVisit().setAsDone();
         specialist.setReservationInVisit(null);
         specialistRepository.save(specialist);
     }
 
-    public boolean isInVisit(Specialist specialist){
+    public boolean isInVisit(){
+        Specialist specialist = getLoggedInSpecialist();
         Optional<Reservation> customer= Optional.ofNullable(specialist.getReservationInVisit());
         if(customer.isPresent())
             return true;
@@ -41,11 +51,12 @@ public class SpecialistService{
     }
 
     public Specialist addSpecialist(String username, String password, String role){
-        Specialist newSpecialist = new Specialist(username
-                                                    , bCryptPasswordEncoder.encode(password)
-                                                    , new HashSet<>(Arrays.asList(roleService.findByRoleName(role)))
-                                                    ,true);
-        return specialistRepository.save(newSpecialist);
+        return specialistRepository.save(Specialist.builder()
+                .username(username)
+                .password(bCryptPasswordEncoder.encode(password))
+                .roles(new HashSet<>(Arrays.asList(roleService.findByRoleName(role))))
+                .active(true)
+                .build());
     }
 
     public boolean checkForAvailableVisit(List<Reservation> reservations){
