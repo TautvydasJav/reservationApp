@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import springframework.reservationApp.domain.Specialist;
 import springframework.reservationApp.repositories.SpecialistRepository;
-import springframework.reservationApp.services.CustomerService;
+import springframework.reservationApp.services.ReservationService;
 import springframework.reservationApp.services.SpecialistService;
 
 @Controller
@@ -19,7 +19,7 @@ import springframework.reservationApp.services.SpecialistService;
 public class SpecialistScreenController {
 
     private final SpecialistService specialistService;
-    private final CustomerService customerService;
+    private final ReservationService reservationService;
     private final SpecialistRepository specialistRepository;
 
     @RequestMapping("/specialist")
@@ -27,18 +27,17 @@ public class SpecialistScreenController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Specialist currentSpecialist = specialistRepository.findByUsername(auth.getName());
 
-        model.addAttribute("customers", customerService.getAvailable(currentSpecialist));
+        model.addAttribute("customers", reservationService.getAvailable(currentSpecialist));
         model.addAttribute("status", specialistService.isInVisit(currentSpecialist));
         return "specialistScreen";
     }
 
     @RequestMapping("/specialist/start")
     public String startVisit(@ModelAttribute("type") String type, RedirectAttributes redirectAttributes){
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Specialist currentSpecialist = specialistRepository.findByUsername(auth.getName());
 
-        if(specialistService.checkForAvailableVisit(customerService.getAvailable(currentSpecialist))) {
+        if(specialistService.checkForAvailableVisit(reservationService.getAvailable(currentSpecialist))) {
             specialistService.setStartOfVisit(currentSpecialist);
         }
         else{
@@ -50,7 +49,6 @@ public class SpecialistScreenController {
 
     @RequestMapping("/specialist/end")
     public String endVisit(@ModelAttribute("type") String type){
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Specialist currentSpecialist = specialistRepository.findByUsername(auth.getName());
 
@@ -62,8 +60,7 @@ public class SpecialistScreenController {
 
     @RequestMapping(value = "/specialist/delete", method = RequestMethod.GET)
     public String deleteCustomerFromSpecialistScreen(@ModelAttribute("id") String id){
-
-        customerService.setAsCanceled(Integer.parseInt(id));
+        reservationService.setAsCanceled(Integer.parseInt(id));
         return "redirect:/specialist";
     }
 }

@@ -11,70 +11,70 @@
 </head>
 <body>
 
-<div class="topnav" style="position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
-    width: 100%;
-    height: 8%;">
-    <a class="active" th:href="@{/reservation}" method="get">Reservation</a>
-    <a th:href="@{/login}" method="get">Login</a>
-    <div class="search-container" style="position: fixed; right: 0; top: 30px;" >
-        <form th:action="@{/reservation/search}" method="get">
-            <input type="search" placeholder="Enter your code..." name="personalCode">
-            <button type="submit"><i class="fa fa-search"></i></button>
-        </form>
-
-    </div>
-</div>
-
-<li>
-    <a id="time" style="font-size: 50px; position: fixed;
-    top: 10%;
-    right: 5%;
-    z-index: 999;"></a>
-    <script th:inline="javascript">
-        function setTime(){
-            var dt=new Date();
-            var strHour=dt.getHours();
-            var strMinutes=dt.getMinutes();
-            if (strMinutes<10) strMinutes="0"+strMinutes;
-            strTime=strHour+":"+strMinutes;
-            time.innerHTML=strTime;
-        }
-        setInterval("setTime()",1000);
-    </script>
-</li>
-
-<div class="content" style="margin-top: 200px; margin-left: 40%;">
-        <h1 class="reservationHeader">Book a reservation</h1>
-    <table>
-        <tr th:each="s : ${specialists}">
-            <form th:action="@{/reservation}" method="post">
-
-                <td><input type="hidden" th:value="${s.id}" name="specialistId" />
-                    <button type="submit" class="button" th:text="${s.username}"></button></td>
+    <div class="topnav" style="position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        width: 100%;
+        height: 8%;">
+        <a class="active" th:href="@{/reservation}" method="get">Reservation</a>
+        <a th:href="@{/login}" method="get">Login</a>
+        <div class="search-container" style="position: fixed; right: 0; top: 30px;" >
+            <form th:action="@{/reservation/search}" method="get">
+                <input type="text" th:value="${personalCode}" th:name="personalCode" placeholder="Enter your code...">
+                <input type="submit" value="Search">
             </form>
-        </tr>
-    </table>
-    <div th:class="${'alert ' + alertClass}" role="alert"  th:if="${message}" style="position: fixed; top: 20%; right: 50%; " >
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-        <strong th:text="${message}" style="font-size: 20px; margin: auto; width: 50%;"></strong><br>
-        <strong th:if="${id}" style="font-size: 20px; margin: auto; width: 50%;">Your ID number </strong><br>
-        <strong th:if="${id}" th:text="${id}" style="font-size: 30px; text-align: center;"></strong> <br>
-        <strong th:if="${time}" style="font-size: 20px; margin: auto; width: 50%;">Visit time: </strong><br>
-        <strong th:if="${time}" th:text="${time}" style="font-size: 30px; text-align: center;"></strong> <br>
-        <strong th:if="${code}" style="font-size: 20px; margin: auto; width: 50%;">Code: </strong><br>
-        <strong th:if="${code}" th:text="${code}" style="font-size: 30px; text-align: center;"></strong> <br>
 
-        <form th:if="${delete}" action="#" th:action="@{/reservation/delete}" method="delete" >
-            <input type="hidden" name="id" th:value="${id}">
-            <button type="submit" class="button">
-                Delete
-            </button>
-        </form>
+        </div>
     </div>
-</div>
-</nav>
+
+    <li>
+        <a id="time" style="font-size: 50px; position: fixed;
+        top: 10%;
+        right: 5%;
+        z-index: 999;"></a>
+        <script th:inline="javascript">
+            function setTime(){
+                var dt=new Date();
+                var strHour=dt.getHours();
+                var strMinutes=dt.getMinutes();
+                if (strMinutes<10) strMinutes="0"+strMinutes;
+                strTime=strHour+":"+strMinutes;
+                time.innerHTML=strTime;
+            }
+            setInterval("setTime()",1000);
+        </script>
+    </li>
+
+    <div class="content" style="margin-top: 200px; margin-left: 40%;">
+            <h1 class="reservationHeader">Book a reservation</h1>
+        <table>
+            <tr th:each="s : ${specialists}">
+                <form th:action="@{/reservation}" method="post">
+
+                    <td><input type="hidden" th:value="${s.id}" name="specialistId" />
+                        <button type="submit" class="button" th:text="${s.username}"></button></td>
+                </form>
+            </tr>
+        </table>
+        <div th:class="${'alert ' + alertClass}" role="alert"  th:if="${message}" style="position: fixed; top: 20%; right: 50%; " >
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <strong th:text="${message}" style="font-size: 20px; margin: auto; width: 50%;"></strong><br>
+            <strong th:if="${id}" style="font-size: 20px; margin: auto; width: 50%;">Your ID number </strong><br>
+            <strong th:if="${id}" th:text="${id}" style="font-size: 30px; text-align: center;"></strong> <br>
+            <strong th:if="${time}" style="font-size: 20px; margin: auto; width: 50%;">Visit time: </strong><br>
+            <strong th:if="${time}" th:text="${time}" style="font-size: 30px; text-align: center;"></strong> <br>
+            <strong th:if="${code}" style="font-size: 20px; margin: auto; width: 50%;">Code: </strong><br>
+            <strong th:if="${code}" th:text="${code}" style="font-size: 30px; text-align: center;"></strong> <br>
+
+            <form th:if="${delete}" action="#" th:action="@{/reservation/delete}" method="post" >
+                <input type="hidden" name="id" th:value="${id}">
+                <button type="submit" class="button">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+    </nav>
 </body>
 </html>

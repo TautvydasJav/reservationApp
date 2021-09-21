@@ -1,7 +1,6 @@
 package springframework.reservationApp.domain;
 
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.*;
@@ -13,10 +12,10 @@ import java.util.*;
 public class Specialist extends User {
 
     @OneToMany(mappedBy = "specialist", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    private List<Customer> customers;
+    private List<Reservation> reservations;
 
     @OneToOne
-    private Customer customerInVisit;
+    private Reservation reservationInVisit;
 
     public Specialist(String username, String password, HashSet<Role> roles, boolean active) {
         super(username, password, roles, active);

@@ -19,22 +19,21 @@ public class SpecialistService{
     private SpecialistRepository specialistRepository;
     private RoleService roleService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private TimeUtils timeUtils;
 
     public void setStartOfVisit(Specialist specialist){
-        specialist.setCustomerInVisit(specialist.getCustomers().get(0));
-        specialist.getCustomerInVisit().setAsInVisit();
+        specialist.setReservationInVisit(specialist.getReservations().get(0));
+        specialist.getReservationInVisit().setAsInVisit();
         specialistRepository.save(specialist);
     }
 
     public void setEndOfVisit(Specialist specialist){
-        specialist.getCustomerInVisit().setAsDone();
-        specialist.setCustomerInVisit(null);
+        specialist.getReservationInVisit().setAsDone();
+        specialist.setReservationInVisit(null);
         specialistRepository.save(specialist);
     }
 
     public boolean isInVisit(Specialist specialist){
-        Optional<Customer> customer= Optional.ofNullable(specialist.getCustomerInVisit());
+        Optional<Reservation> customer= Optional.ofNullable(specialist.getReservationInVisit());
         if(customer.isPresent())
             return true;
         else
@@ -42,7 +41,6 @@ public class SpecialistService{
     }
 
     public Specialist addSpecialist(String username, String password, String role){
-
         Specialist newSpecialist = new Specialist(username
                                                     , bCryptPasswordEncoder.encode(password)
                                                     , new HashSet<>(Arrays.asList(roleService.findByRoleName(role)))
@@ -50,13 +48,12 @@ public class SpecialistService{
         return specialistRepository.save(newSpecialist);
     }
 
-    public boolean checkForAvailableVisit(List<Customer> customers){
-
-        if(customers.isEmpty())
+    public boolean checkForAvailableVisit(List<Reservation> reservations){
+        if(reservations.isEmpty())
             return false;
 
-        if(customers.get(0).getVisitTime().isBefore(timeUtils.getLocalTimeNow()) ||
-                customers.get(0).getVisitTime().equals(timeUtils.getLocalTimeNow())){
+        if(reservations.get(0).getVisitTime().isBefore(TimeUtils.getLocalTimeNow()) ||
+                reservations.get(0).getVisitTime().equals(TimeUtils.getLocalTimeNow())){
             return true;
         }
         else

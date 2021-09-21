@@ -1,20 +1,18 @@
-package springframework.reservationApp.utils;
+package springframework.reservationApp.services;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import springframework.reservationApp.domain.Customer;
-import springframework.reservationApp.repositories.CustomerRepository;
+import org.springframework.stereotype.Service;
+import springframework.reservationApp.repositories.ReservationRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-@Component
-public class PersonalCodeUtil{
+@Service
+@AllArgsConstructor
+public class UserPersonalCodeService{
 
-    private final CustomerRepository customerRepository;
-
-    public PersonalCodeUtil(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
+    private final ReservationRepository reservationRepository;
 
     public String generateCode(){
         ArrayList<Integer> list = new ArrayList<>();
@@ -33,10 +31,6 @@ public class PersonalCodeUtil{
     }
 
     public boolean checkIfCodeIsUnique(String personalCode) {
-        if(customerRepository.existsByPersonalCode(personalCode)) {
-            return false;
-        }
-        else
-            return true;
+        return !reservationRepository.existsByPersonalCode(personalCode);
     }
 }

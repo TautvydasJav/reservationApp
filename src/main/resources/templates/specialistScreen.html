@@ -74,7 +74,7 @@
       z-index: 999;">
     <h1 class="reservationHeader">Customers list</h1>
     <table>
-      <tr th:each="c : ${customers}">
+      <tr th:each="c : ${reservations}">
         <td>
           <form th:action="@{/specialist/delete}" method="delete">
             <strong style="font-size: 20px; text-align: center;">ID: </strong>

@@ -1,22 +1,17 @@
 package springframework.reservationApp.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import springframework.reservationApp.utils.TimeUtils;
 
 import javax.persistence.*;
 import java.time.LocalTime;
 import static springframework.reservationApp.enums.CustomerStatus.*;
-import static springframework.reservationApp.utils.TimeUtils.*;
 
-@Entity
-@Access(AccessType.FIELD )
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class Customer implements Comparable<Customer>{
+@Entity
+public class Reservation implements Comparable<Reservation>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,11 +31,11 @@ public class Customer implements Comparable<Customer>{
     private Specialist specialist;
 
     @Override
-    public int compareTo(Customer o) {
+    public int compareTo(Reservation o) {
         return visitTime.compareTo(o.visitTime);
     }
 
-    public Customer(String personalCode, LocalTime visitTime, Specialist specialist) {
+    public Reservation(String personalCode, LocalTime visitTime, Specialist specialist) {
         this.personalCode = personalCode;
         this.visitTime = visitTime;
         this.status = WAITING.name();
@@ -48,12 +43,21 @@ public class Customer implements Comparable<Customer>{
     }
 
     public void setAsCanceled() { status = CANCELED.name();}
+
     public void setAsDone() {
         status = DONE.name();
-        endTime = getLocalTimeNow();
+        endTime = TimeUtils.getLocalTimeNow();
     }
     public void setAsInVisit() {
         status = INVISIT.name();
-        startTime = getLocalTimeNow();
+        startTime = TimeUtils.getLocalTimeNow();
+    }
+
+    public boolean isActive() {
+        if(status.equals(WAITING.name())){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

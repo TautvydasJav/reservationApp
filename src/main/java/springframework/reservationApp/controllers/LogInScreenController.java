@@ -18,7 +18,6 @@ public class LogInScreenController {
 
     @RequestMapping("/default")
     public String defaultAfterLogin() {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         boolean hasSpecialistRole = auth.getAuthorities().stream()

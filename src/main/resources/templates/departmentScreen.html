@@ -53,10 +53,10 @@
     <table>
         <tr th:each="s : ${specialists}">
             <td>
-                <strong th:th:if="${s.getCustomerInVisit() != null}" th:text="${s.getUsername()}" style="font-size: 25px; color: red;"></strong>
-                <strong th:th:if="${s.getCustomerInVisit() == null}" th:text="${s.getUsername()}" style="font-size: 25px; color: green;"></strong>
-                <strong th:th:if="${s.getCustomerInVisit() != null}" style="font-size: 20px; text-align: center;">ID: </strong>
-                <strong th:text="${s?.customerInVisit?.getId()}" style="font-size: 20px; text-align: center;"></strong>
+                <strong th:th:if="${s.getReservationInVisit() != null}" th:text="${s.getUsername()}" style="font-size: 25px; color: red;"></strong>
+                <strong th:th:if="${s.getReservationInVisit() == null}" th:text="${s.getUsername()}" style="font-size: 25px; color: green;"></strong>
+                <strong th:th:if="${s.getReservationInVisit() != null}" style="font-size: 20px; text-align: center;">ID: </strong>
+                <strong th:text="${s?.getReservationInVisit?.getId()}" style="font-size: 20px; text-align: center;"></strong>
             </td>
         </tr>
     </table>
@@ -68,7 +68,7 @@
     z-index: 999;">
     <h1 class="reservationHeader">Customers list</h1>
     <table>
-        <tr th:each="c : ${customers}">
+        <tr th:each="c : ${reservations}">
             <td>
                     <strong style="font-size: 25px; text-align: center;">Specialist: </strong>
                     <strong th:text="${c.getSpecialist().getUsername()}" style="font-size: 25px; text-align: center;"></strong>

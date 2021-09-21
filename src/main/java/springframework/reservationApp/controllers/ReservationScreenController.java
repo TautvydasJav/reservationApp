@@ -6,64 +6,62 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import springframework.reservationApp.domain.Customer;
+import springframework.reservationApp.domain.Reservation;
 import springframework.reservationApp.repositories.SpecialistRepository;
-import springframework.reservationApp.services.CustomerService;
+import springframework.reservationApp.services.ReservationService;
 
 @Controller
 @AllArgsConstructor
+@RequestMapping("/reservation")
 public class ReservationScreenController {
 
-    private final CustomerService customerService;
+    private final ReservationService reservationService;
     private final SpecialistRepository specialistRepository;
 
-    @RequestMapping("/reservation")
+    @GetMapping
     public String reservationScreen(Model model){
         model.addAttribute("specialists", specialistRepository.findAll());
         return "reservationScreen";
     }
 
-    @PostMapping("/reservation")
-    public String reservationPostCustomer(@Param("specialistId") String specialistId, RedirectAttributes redirectAttributes) {
-
-        Customer newCustomer = customerService.addCustomer(specialistRepository.findById(Integer.parseInt(specialistId)));
-
-        redirectAttributes.addFlashAttribute("message", "Visit limit has been reached");
-        redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
-        if(newCustomer == null)
-            return "redirect:/reservation";
-
-        redirectAttributes.addFlashAttribute("message", "");
-        redirectAttributes.addFlashAttribute("alertClass", "alert-success");
-        redirectAttributes.addFlashAttribute("id", newCustomer.getId());
-        redirectAttributes.addFlashAttribute("time", newCustomer.getVisitTime());
-        redirectAttributes.addFlashAttribute("code", newCustomer.getPersonalCode());
-        return "redirect:/reservation";
-    }
-
-    @GetMapping("/reservation/search")
-    public String searchCustomer(@Param("personalCode") String personalCode, RedirectAttributes redirectAttributes) {
-
-        if(!customerService.existsByPersonalCode(personalCode)){
+    @GetMapping(path = "/search")
+    public String findCustomer(@Param("personalCode") String personalCode, RedirectAttributes redirectAttributes) {
+        if(!reservationService.existsByPersonalCode(personalCode)){
             redirectAttributes.addFlashAttribute("message", "Could not found");
             redirectAttributes.addFlashAttribute("alertClass", "alert-warning");
             return "redirect:/reservation";
         }
 
-        Customer foundCustomer = customerService.findByPersonalCode(personalCode);
+        Reservation foundReservation = reservationService.findByPersonalCode(personalCode);
         redirectAttributes.addFlashAttribute("message", "Reservation found");
         redirectAttributes.addFlashAttribute("alertClass", "alert-info");
-        redirectAttributes.addFlashAttribute("id", foundCustomer.getId());
-        redirectAttributes.addFlashAttribute("time", foundCustomer.getVisitTime());
-        redirectAttributes.addFlashAttribute("code", foundCustomer.getPersonalCode());
-        redirectAttributes.addFlashAttribute("delete", true);
+        redirectAttributes.addFlashAttribute("id", foundReservation.getId());
+        redirectAttributes.addFlashAttribute("time", foundReservation.getVisitTime());
+        redirectAttributes.addFlashAttribute("code", foundReservation.getPersonalCode());
+        redirectAttributes.addFlashAttribute("delete", foundReservation.isActive());
+        return "redirect:/reservation";
+    }
+    @PostMapping
+    public String postCustomer(@Param("specialistId") String specialistId, RedirectAttributes redirectAttributes) {
+        Reservation newReservation = reservationService.addCustomer(specialistRepository.findById(Integer.parseInt(specialistId)));
+
+        redirectAttributes.addFlashAttribute("message", "Visit limit has been reached");
+        redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+        if(newReservation == null)
+            return "redirect:/reservation";
+
+        redirectAttributes.addFlashAttribute("message", "");
+        redirectAttributes.addFlashAttribute("alertClass", "alert-success");
+        redirectAttributes.addFlashAttribute("id", newReservation.getId());
+        redirectAttributes.addFlashAttribute("time", newReservation.getVisitTime());
+        redirectAttributes.addFlashAttribute("code", newReservation.getPersonalCode());
         return "redirect:/reservation";
     }
 
-    @RequestMapping(value = "/reservation/delete", method = RequestMethod.GET)
-    public String cancelCustomer(@ModelAttribute("id") String id) {
-
-        customerService.setAsCanceled(Integer.parseInt(id));
+    @RequestMapping("/delete")
+    public String cancelCustomer(@Param("id") String id) {
+        System.out.println(id);
+        reservationService.setAsCanceled(Integer.parseInt(id));
 
         return "redirect:/reservation";
     }

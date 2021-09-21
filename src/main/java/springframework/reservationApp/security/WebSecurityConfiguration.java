@@ -40,8 +40,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().ignoringAntMatchers("/h2-console/**")
                 .and().authorizeRequests().antMatchers("/reservation/**/**").permitAll()
-                .and().authorizeRequests().antMatchers("reservation/search/**").permitAll()
-                .and().authorizeRequests().antMatchers("/reservation/delete/**").permitAll()
                 .and().authorizeRequests().antMatchers("/default/**").hasAnyAuthority()
                 .and().authorizeRequests().antMatchers("/specialist/**").hasAuthority("SPECIALIST")
                 .and().authorizeRequests().antMatchers("/department/**").hasAuthority("DEPARTMENT")
